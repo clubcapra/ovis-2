@@ -2,20 +2,15 @@
 
 <robot name="ovis" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <xacro:property name="ovis_base_origin" value="$(arg ovis_base_origin)" />
 
     <xacro:include filename="$(find ovis_description)/urdf/gazebo.urdf.xacro" />
-    <!-- <xacro:include filename="$(find ovis_description)/urdf/ovis.urdf.xacro" /> -->
-    <xacro:include
-        filename="$(find ovis_description)/urdf/ovis2/urdf/ovis.urdf.xacro" />
-    <!-- <xacro:include filename="$(find ovis_description)/urdf/kinova_common.xacro" /> -->
-    <xacro:include
-        filename="$(find ovis_description)/urdf/ovis2/urdf/ovis_common.xacro" />
-
+    <xacro:include filename="$(find ovis_description)/urdf/ovis2/urdf/ovis.urdf.xacro" />
+    <xacro:include filename="$(find ovis_description)/urdf/ovis2/urdf/ovis_common.xacro" />
 
     <xacro:property name="robot_root" value="ovis_base_link" />
     <link name="base_link" />
 
-    <!-- Define the base link -->
     <link name="ovis_base_link">
         <inertial>
             <origin xyz="0 0 0" />
@@ -24,11 +19,38 @@
         </inertial>
     </link>
 
-    <!-- Attach the ovis_base_link to the world or rove with a fixed joint -->
+    <link name="friction_plate_ovis">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.25 0.25 0.01" />
+            </geometry>
+            <material name="frame_color" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.25 0.25 0.01" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.0" />
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+        </inertial>
+    </link>
+
+    <joint name="friction_plate_ovis_joint" type="fixed">
+        <parent link="ovis_base_link" />
+        <child link="friction_plate_ovis" />
+        <origin xyz="0 0 -0.01" rpy="0 0 0" />
+    </joint>
+
     <joint name="fixed_to_world" type="fixed">
         <parent link="base_link" />
         <child link="ovis_base_link" />
-        <origin xyz="-0.2 0 0.2" rpy="0 0 0" />
+        <xacro:property name="origin_parts" value="${ovis_base_origin.split()}" />
+        <origin xyz="${origin_parts[0]} ${origin_parts[1]} ${origin_parts[2]}"
+            rpy="${origin_parts[3]} ${origin_parts[4]} ${origin_parts[5]}" />
     </joint>
 
     <xacro:ovis base_parent="${robot_root}" />

@@ -55,12 +55,12 @@
 #include <rclcpp/utilities.hpp>
 #include <thread>
 
-// We'll just set up parameters here
+// Default topic
 const std::string JOY_TOPIC = "/ovis/joy";
 const std::string TWIST_TOPIC = "/ovis/servo_node/delta_twist_cmds";
 const std::string JOINT_TOPIC = "/ovis/servo_node/delta_joint_cmds";
 const std::string EEF_FRAME_ID = "ovis_end_effector";
-const std::string BASE_FRAME_ID = "ovis_link_base";
+const std::string BASE_FRAME_ID = "ovis_base_link";
 
 // Enums for button names -> axis/button array index
 // For XBOX 1 controller
